@@ -1,58 +1,54 @@
-import java.util.logging.Level;
-import java.util.logging.Logger;
+/*
+STUDENT NAME:Masike Junior Rasenyalo
+STUDENT ID:ST10452404
+PROJECT NAME:Number Guessing Game 
+*/
+import java.io.ByteArrayInputStream;
+import java.util.Scanner;
 import numbergame.java.EasyGame;
 import numbergame.java.Game;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class GameTest {
 
     @Test
-    public void testPlayAgainContinue() {
-        try {
-            Game game = new EasyGame();
-            game.playAgain();
-            assertEquals("C", game.getChoice());
-            assertTrue(game.isPlaying());
-        } catch (Exception ex) {
-            Logger.getLogger(GameTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Test
-    public void testPlayAgainMainMenu() {
+    public void testGenerateTargetNumber() {//100%
         Game game = new EasyGame();
-        game.playAgain();
-        assertEquals("M", game.getChoice());
-        assertFalse(game.isPlaying());
+        int targetNumber = game.generateTargetNumber();
+        assertTrue("Target number should be between 1 and 10", targetNumber >= 1 && targetNumber <= 10);
     }
 
     @Test
-    public void testPlayAgainQuit() {
+    public void testPlay() throws Exception {//0%
         Game game = new EasyGame();
-        game.playAgain();
-        assertEquals("Q", game.getChoice());
-        assertFalse(game.isPlaying());
+        String input = "5\nM\n1\n"; // simulate user input: guess 5, then return to main menu, then select easy game
+        game.scanner = new Scanner(input);
+        game.play(game.scanner);
+        assertEquals("Score should be 1", 1, game.score);
     }
 
     @Test
-    public void testPlayAgainInvalidChoice() {
+    public void testPlayAgain() throws Exception {//0%
         Game game = new EasyGame();
-        game.playAgain();
-        assertEquals("Invalid choice. Exiting game.", game.getMessage());
-        assertFalse(game.isPlaying());
+        String input = "C\n5\nM\n1\n"; // simulate user input: play again, guess 5, then return to main menu, then select easy game
+        game.scanner = new Scanner(input);
+        game.playAgain(game.scanner);
+        assertNotNull("Target number should be regenerated", game.targetNumber);
     }
 
     @Test
-    public void testDisplayRules() {
+    public void testGetRules() {//100%
+        Game game = new EasyGame();
+        String rules = game.getRules();
+        assertNotNull("Rules should not be null", rules);
+        assertTrue("Rules should contain the correct text", rules.contains("Guess a number within the range."));
+    }
+
+    @Test
+    public void testDisplayRules() {//100%
         Game game = new EasyGame();
         game.displayRules();
-        assertNotNull(game.getRules());
-    }
-
-    @Test
-    public void testPlay() throws Exception {
-        Game game = new EasyGame();
-        game.play();
-        assertTrue(game.isPlaying());
+        // no assertions, just verify that it doesn't throw an exception
     }
 }

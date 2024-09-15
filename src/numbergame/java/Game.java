@@ -12,16 +12,17 @@ package numbergame.java;
 import com.sun.tools.javac.Main;
 import java.util.Random;
 import java.util.Scanner;
+import static numbergame.java.NumberGameJava.mainMenu;
 
 public abstract class Game {
     protected int[] previousGuesses;
-    protected int targetNumber;
-    protected int minRange;
-    protected int maxRange;
-    protected int maxAttempts;
-    protected int score;
-    protected int chances;
-    protected Scanner scanner;
+    public int targetNumber;
+    public int minRange;
+    public int maxRange;
+    public int maxAttempts;
+    public int score;
+    public int chances;
+    public Scanner scanner;
 
     public Game(int minRange, int maxRange, int maxAttempts) {
         this.minRange = minRange;
@@ -34,21 +35,21 @@ public abstract class Game {
         this.scanner = new Scanner(System.in);
     }
 
-    protected int generateTargetNumber() {
+    public int generateTargetNumber() {
         Random random = new Random();
         return random.nextInt(maxRange - minRange + 1) + minRange;
     }
 
-    public void play() throws Exception {
+    public void play(Scanner scanner1) throws Exception {
         int attempts = 0;
 
         while (attempts < maxAttempts) {
             System.out.print("Enter your guess (or M to return to the main menu): ");
             String input = scanner.next();
 
-            if (input.equalsIgnoreCase("M")) {
+            if (input.equalsIgnoreCase("m")) {
                 System.out.println("Returning to the main menu.");
-                returnToMainMenu();
+                mainMenu(scanner);
                 return;
             }
 
@@ -67,7 +68,7 @@ public abstract class Game {
                     score++;
                     chances = attempts + 1;
                     System.out.println("It took you " + chances + " chances to get the correct answer.");
-                    playAgain();
+                    playAgain(scanner);
                     return;
                 } else if (guess < targetNumber) {
                     System.out.println("Too low. Try again!");
@@ -82,18 +83,18 @@ public abstract class Game {
         }
 
         System.out.println("Game over. The target number was " + targetNumber);
-        playAgain();
+        playAgain(scanner);
     }
 
-    public void playAgain() throws Exception {
+    public void playAgain(Scanner scanner1) throws Exception {
         System.out.println("Do you want to play again? (C)ontinue, (M)ain menu, or (Q)uit");
         String choice = scanner.next().toUpperCase();
         scanner.nextLine(); // Consume newline left-over
 
         if (choice.equals("C")) {
             targetNumber = generateTargetNumber();
-            play();
-        } else if (choice.equals("M")) {
+            play(scanner);
+        } else if (choice.equals("m")) {
             returnToMainMenu();
         } else if (choice.equals("Q")) {
             System.out.println("Thanks for playing! Your final score is " + score);
@@ -108,5 +109,19 @@ public abstract class Game {
         Main.main(new String[0]);
     }
 
-    public abstract void displayRules();
+    public boolean isPlaying() {
+        return true; // assume the game is playing until it's explicitly stopped
+    }
+
+    public String getRules() {
+        return "The rules of the game are: \n" +
+               "1. Guess a number within the range.\n" +
+               "2. You have " + maxAttempts + " attempts to guess the correct number.\n" +
+               "3. After each guess, you'll get a hint whether your guess is too high or too low.\n" +
+               "4. If you guess the correct number, you win! Otherwise, the game will end after " + maxAttempts + " attempts.";
+    }
+
+    public void displayRules() {
+        System.out.println(getRules());
+    }
 }

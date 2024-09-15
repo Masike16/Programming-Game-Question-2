@@ -6,22 +6,24 @@ PROJECT NAME:Number Guessing Game
 package numbergame.java;
 
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
-/**
- *
- * @author masik
- */
 public class NumberGameJava {
-    
-    public static void main(String[] args) throws Exception {// exceptions still having toble loading in
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Select a difficulty level:");
-            System.out.println("1. Easy");
-            System.out.println("2. Hard");
-            System.out.println("3. Quit");
+            mainMenu(scanner);
+        }
+    }
 
+    public static void mainMenu(Scanner scanner) throws Exception {
+        System.out.println("Select a difficulty level:");
+        System.out.println("1. Easy");
+        System.out.println("2. Hard");
+        System.out.println("3. Quit");
+
+        try {
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline left-over
 
@@ -39,12 +41,19 @@ public class NumberGameJava {
                     System.exit(0);
                 default:
                     System.out.println("Invalid choice. Please try again.");
-                    continue;
+                    mainMenu(scanner);
+                    return;
             }
 
             game.displayRules();
-            game.play();
+            game.play(scanner);
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please try again.");
+            scanner.nextLine(); // Consume invalid input
+            mainMenu(scanner);
         }
     }
 }
+
+
 

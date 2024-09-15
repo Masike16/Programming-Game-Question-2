@@ -9,9 +9,9 @@ package numbergame.java;
  *
  * @author masik
  */
-public class EasyGame extends Game {
+public class EasyGame extends Game {//easy game mode 
     public EasyGame() {
-        super(1, 10, 5);
+        super(1, 10, 5);//most guessable numbers
     }
 
     @Override
